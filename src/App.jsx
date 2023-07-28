@@ -8,13 +8,13 @@ import Home from "./pages/Home";
 const App = () => {
   return (
     <div className="w-[100%] h-screen text-sm flex flex-col">
-      <div className="w-[100%] h-[10%] bg-blue-500 flex items-center text-xl text-whire font-bold">KREIFEUR App mobile </div>
+      <div className="w-[100%] h-[5%] bg-blue-500 flex items-center ">App mobile </div>
       <BrowserRouter>
 
 
           {/* les routes */}
           <Routes>
-          <Route path="/mobile/" element={<Home />}></Route>
+          <Route path="/" element={<Home />}></Route>
             <Route path="/etat" element={<Etat />}></Route>
             <Route path="/sell" element={<Sell />}></Route>
           </Routes>
