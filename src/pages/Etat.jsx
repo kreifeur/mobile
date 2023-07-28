@@ -6,7 +6,7 @@ const Etat = () => {
   const [camion, setCamion] = useState();
   const senddata = (e) => {
     e.preventDefault();
-    axios.get(`http://127.0.0.1:3000/charge/${camion}`).then((res) => {
+    axios.get(`https://kreifeur-goujil.onrender.com/charge/${camion}`).then((res) => {
       setData(res.data);
     });
   };

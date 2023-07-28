@@ -17,12 +17,12 @@ const Sell = () => {
   const [benefits, setBenefits] = useState(0);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:3000/products").then((res) => {
+    axios.get("https://kreifeur-goujil.onrender.com/products").then((res) => {
       const productNames = res.data.map((product) => product.name);
       setProductSuggestions(productNames);
     });
 
-    axios.get("http://127.0.0.1:3000/customers").then((res) => {
+    axios.get("https://kreifeur-goujil.onrender.com/customers").then((res) => {
       const clientNames = res.data.map((client) => client.name);
       setClientSuggestions(clientNames);
     });
@@ -41,11 +41,11 @@ const Sell = () => {
 
   const addproduct = async () => {
     await axios
-      .get(`http://127.0.0.1:3000/charge/${product}/${vendeur}`)
+      .get(`https://kreifeur-goujil.onrender.com/charge/${product}/${vendeur}`)
       .then((res) => {
         const seuil = res.data[0].qterestant;
         if ( +qte2 <= +seuil) {
-          axios.get(`http://127.0.0.1:3000/product/${product}`).then((res) => {
+          axios.get(`https://kreifeur-goujil.onrender.com/product/${product}`).then((res) => {
             const newProduct = { ...res.data[0], qte2: qte2 };
             setOneProduct(newProduct);
             setProducts((prevProducts) => {
@@ -82,17 +82,17 @@ const Sell = () => {
   const enregistrer = () => {
     products.map((e) => {
       axios
-        .put(`http://127.0.0.1:3000/${e.id}`, {
+        .put(`https://kreifeur-goujil.onrender.com/${e.id}`, {
           ...e,
           ...{ qte: e.qte - e.qte2 },
         })
         .then((res) => console.log(res));
 
       axios
-        .get(`http://127.0.0.1:3000/charge/${e.name}/${vendeur}`)
+        .get(`https://kreifeur-goujil.onrender.com/charge/${e.name}/${vendeur}`)
         .then((res) => {
           axios
-            .put(`http://127.0.0.1:3000/charge/${res.data[0].id}`, {
+            .put(`https://kreifeur-goujil.onrender.com/charge/${res.data[0].id}`, {
               ...res.data[0],
               ...{
                 qteacheter: +res.data[0].qteacheter + +e.qte2,
@@ -103,7 +103,7 @@ const Sell = () => {
         });
     });
     axios
-      .post("http://127.0.0.1:3000/addvente", {
+      .post("https://kreifeur-goujil.onrender.com/addvente", {
         vendeur: vendeur,
         client: client,
         total: sum,
@@ -114,17 +114,17 @@ const Sell = () => {
       .then((res) => console.log(res));
 
     axios
-      .get(`http://127.0.0.1:3000/customer/${client}`)
+      .get(`https://kreifeur-goujil.onrender.com/customer/${client}`)
       .then((res) =>
         axios
-          .put(`http://127.0.0.1:3000/customer/${res.data[0].id}`, {
+          .put(`https://kreifeur-goujil.onrender.com/customer/${res.data[0].id}`, {
             ...res.data[0],
             ...{ gain: +res.data[0].gain + +(sum - versement) },
           })
           .then((x) => console.log(x))
       );
 
-      axios.post('http://127.0.0.1:3000/facture',
+      axios.post('https://kreifeur-goujil.onrender.com/facture',
       
       {'products':products ,'total':sum , 'versement':versement , 'vendeur':vendeur , 'client':client},{
         responseType: 'blob', // Set response type to blob
