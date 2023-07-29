@@ -9,7 +9,7 @@ const Sell = () => {
   const [oneproduct, setOneProduct] = useState({});
   const [qte2, setQte] = useState("");
   const [sum, setSum] = useState(0);
-  const [versement, setVersement] = useState(0);
+  const [versement, setVersement] = useState('');
   const [client, setClient] = useState("");
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [vendeur, setVendeur] = useState("");
@@ -44,7 +44,7 @@ const Sell = () => {
       .get(`https://kreifeur-goujil.onrender.com/charge/${product}/${vendeur}`)
       .then((res) => {
         const seuil = res.data[0].qterestant;
-        if ( +qte2 <= +seuil) {
+        if (+qte2 <= +seuil) {
           axios.get(`https://kreifeur-goujil.onrender.com/product/${product}`).then((res) => {
             const newProduct = { ...res.data[0], qte2: qte2 };
             setOneProduct(newProduct);
@@ -76,8 +76,6 @@ const Sell = () => {
       return updatedProducts;
     });
   };
-
- 
 
   const enregistrer = () => {
     products.map((e) => {
@@ -124,11 +122,13 @@ const Sell = () => {
           .then((x) => console.log(x))
       );
 
-      axios.post('https://kreifeur-goujil.onrender.com/facture',
-      
-      {'products':products ,'total':sum , 'versement':versement , 'vendeur':vendeur , 'client':client},{
+    axios
+      .post('https://kreifeur-goujil.onrender.com/facture', {
+        'products': products, 'total': sum, 'versement': versement, 'vendeur': vendeur, 'client': client
+      }, {
         responseType: 'blob', // Set response type to blob
-      }).then((response) =>{
+      })
+      .then((response) => {
         // Create a Blob from the response data
         const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
 
@@ -148,8 +148,8 @@ const Sell = () => {
       })
       .catch((error) => console.error('Error generating receipt:', error));
 
-
-      
+    // After the sell operation, reset the inputs
+    resetInputs();
   };
 
   // Function to calculate benefits for each product and update the state
@@ -164,9 +164,25 @@ const Sell = () => {
   const productPlaceholder = { label: "المنتج", value: null };
   const clientPlaceholder = { label: "الزبون", value: null };
 
+  const resetInputs = () => {
+    setProducts([]);
+    setProduct("");
+    setProductSuggestions([]);
+    setOneProduct({});
+    setQte("");
+    setSum(0);
+    setVersement('');
+    setClient("");
+    setClientSuggestions([]);
+    setVendeur("");
+    setSeuil(0);
+    setBenefits(0);
+  };
+
   return (
     <div className="flex flex-col justify-center gap-2 items-center h-[100%]">
       <input
+      value={vendeur}
         placeholder="البائع"
         className="border p-2 w-[90%] outline-none"
         onChange={(e) => setVendeur(e.target.value)}
@@ -196,6 +212,7 @@ const Sell = () => {
       />
 
       <input
+      value={qte2}
         placeholder="الكمية"
         className="border p-2 w-[90%] outline-none"
         onChange={(e) => setQte(e.target.value)}
@@ -228,7 +245,6 @@ const Sell = () => {
       <div className="w-[90%] flex flex-col gap-3 items-center p-2 bg-gray-100">
         <div className="font-bold w-[90%] text-center">Total: {sum}</div>
 
-
         <Select
           options={[
             clientPlaceholder,
@@ -249,7 +265,7 @@ const Sell = () => {
           }}
         />
 
-        <input
+        <input value={versement}
           placeholder="تم دفع"
           className="border p-2 w-[90%] outline-none"
           onChange={(e) => setVersement(e.target.value)}

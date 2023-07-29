@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Etat from "./pages/Etat";
 import Sell from "./pages/Sell";
 import Home from "./pages/Home";
+import Client from "./pages/Client";
 
 
 
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/mobile/" element={<Home />}></Route>
             <Route path="/etat" element={<Etat />}></Route>
             <Route path="/sell" element={<Sell />}></Route>
+            <Route path="/add" element={<Client />}></Route>
           </Routes>
 
 
